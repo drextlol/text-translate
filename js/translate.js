@@ -1,28 +1,49 @@
 'use strict'
 
-//variável, lingua, tradução 
-var libLang = {
-	"meu_texto":{
-		pt: "Meu Texto",
-		en: "My text"
-	},
-	"download_plugin": {
-    	pt: "Descarregar plugin",
-    	en: "Download plugin"
-  	}
-}
-
-$("[data-set-translate]").on('click', function(e){
-    e.preventDefault();
-    var lang;
-
-    lang = $(this).data('set-translate');
-
-    $("[data-get-translate]").each(function(index, val) {
-    	var variable = $(this).data('get-translate');
-    	console.log(index);
-    	console.log(val);
-    	
-    });
+$(document).ready(function() {
+    modules.init();
 });
 
+
+var modules = (function(){
+    var self;
+    self = {};
+
+    self.init = (function(){
+        self.setTranslate();
+        self.getTranslate();
+    });
+
+    self.setTranslate = (function(){
+        $("[data-set-translate]").on('click', function(e){
+            e.preventDefault();
+            
+            var lang;
+            lang = $(this).data('set-translate');
+            
+            self.getTranslate("dictionary.json", lang);
+            
+            /*if(!localStorage.getItem('i18n')){
+                localStorage.setItem('i18n', lang);
+            }else{
+                
+            }*/
+        });
+
+    });
+
+    self.getTranslate = (function(archive, lang){
+        /* Variables */
+        var getText;
+
+        /* Get file JSON */
+        $.getJSON(archive, "json", function(data) {
+            $("[data-get-translate]").each(function(index, val) {
+                getText = $(this).data('get-translate');
+                $(this).text(data[getText][lang]);
+            });
+        });
+    });
+
+    return self;
+})();

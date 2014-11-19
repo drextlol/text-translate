@@ -1,0 +1,10 @@
+{
+	"meu_texto":{
+		"pt": "Meu Texto",
+		"en": "My text"
+	},
+	"download_plugin":{ 
+		"pt": "Descarregar plugin",
+		"en": "Download plugin"
+	}
+}
