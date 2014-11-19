@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>textTranslate</title>
+	<link rel="stylesheet" href="css/reset-2.0.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<ul>
+		<!-- Usando a tradução por arquivo JSON -->
+		<li><a href="#" data-set-translate="pt">Português</a></li>
+		<li><a href="#" data-set-translate="en">English</a></li>
+		
+		<!-- Usando a tradução nos datas -->
+		<li><a href="#" data-set-translate="pt" data-prop-translate="inline">Português</a></li>
+		<li><a href="#" data-set-translate="en" data-prop-translate="inline">English</a></li>
+	</ul>
+	<ul>
+		<!-- Usando a tradução por arquivo JSON -->
+		<li><p data-get-translate="download_plugin">Download Plugin</p></li>
+		<li><p data-get-translate="meu_texto">Meu texto</p></li>
+		<li><p data-get-translate="meu_texto">Meu texto</p></li>
+
+		<!-- Usando a tradução nos datas -->
+		<li><p data-get-translate-pt="Meu texto que será traduzido">My text to be translated</p></li>
+		<li><p data-get-translate-en="My text to be translated">Meu texto que será traduzido</p></li>
+	</ul>
+
+	<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="js/translate.js"></script>
+</body>
+</html>
