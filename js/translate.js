@@ -1,38 +1,37 @@
-'use strict'
+/*jslint white: true */
 
-$(document).ready(function() {
-    modules.init();
-});
+var modules = function(pathDict, langDefault){
+    var self, lang;
+    self = {}
 
-
-var modules = (function(){
-    var self;
-    self = {};
-
-    self.init = (function(){
+    self.init = function(){
         self.setTranslate();
         self.getTranslate();
-    });
+    }
 
-    self.setTranslate = (function(){
-        $("[data-set-translate]").on('click', function(e){
-            e.preventDefault();
-            
-            var lang;
+    self.loadTranslate = function(lang){
+        if(lang != ""){
             lang = $(this).data('set-translate');
-            
-            self.getTranslate("dictionary.json", lang);
-            
-            /*if(!localStorage.getItem('i18n')){
+        }else{
+            if(!localStorage.getItem('i18n')){
                 localStorage.setItem('i18n', lang);
             }else{
                 
-            }*/
+            }
+        }
+    }
+
+    self.setTranslate = function(){
+        $("[data-set-translate]").on('click', function(e){
+            e.preventDefault();
+
+            self.getTranslate("dictionary.json", lang);
+            
         });
 
-    });
+    }
 
-    self.getTranslate = (function(archive, lang){
+    self.getTranslate = function(archive, lang){
         /* Variables */
         var getText;
 
@@ -43,7 +42,11 @@ var modules = (function(){
                 $(this).text(data[getText][lang]);
             });
         });
-    });
+    }
 
     return self;
-})();
+}();
+
+$(document).ready(function(){
+    $(document).textTranslate();
+});
