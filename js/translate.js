@@ -5,7 +5,7 @@ var moduleTranslate = function(){
     self = {}
 
     self.init = function(userOptions){
-        self.storageTranslate(self.loadOptions(userOptions));
+        self.saveLanguage(self.loadOptions(userOptions));
     }
 
     /* Pega as opões de linguagem default,
@@ -26,8 +26,16 @@ var moduleTranslate = function(){
     }
 
     /* Carrega uma linguagem default do storage */
-    self.storageTranslate = function(load){
-        var storageLang, objStorage;
+    self.saveLanguage = function(load){
+        if(Modernizr.localstorage){
+            self.storageAction(load);
+        }else{
+            self.cookieAction(load);
+        }
+    }
+
+    self.storageAction = function(load){
+        var objStorage;
 
         objStorage = localStorage.getItem('i18n');
 
@@ -44,6 +52,25 @@ var moduleTranslate = function(){
         }
     }
 
+    self.cookieAction = function(load){
+        var objStorage;
+
+        objStorage = moduleTranslate.cookie._getCookie('i18n');
+
+        if(moduleTranslate.cookie._getCookie('i18n')){
+            self.getTranslate(objStorage);
+        }else{
+            objStorage = {
+                langDefault: load.langDefault,
+                pathDict: load.pathDict
+            }
+
+            moduleTranslate.cookie._setCookie('i18n', JSON.stringify(objStorage));
+            self.getTranslate(moduleTranslate.cookie._getCookie('i18n'));
+        }
+
+    }
+
     self.getTranslate = function(storageBrowser){
         var getText, objStorage, error;
 
@@ -58,20 +85,22 @@ var moduleTranslate = function(){
                         $(this).text(data[getText][objStorage.langDefault]);
                     }else{
                         error = "O parâmetro de idioma '" + objStorage.langDefault + "' informado, não existe no arquivo " + objStorage.pathDict + ", verique seus parâmetros.";
-                        self.loadcallback(error);
+                        self.loadcallback._error(error);
                         return false;
                     }
                 }else{
                     error = "A váriavel '" + getText + "' não existe no arquivo " + objStorage.pathDict + ", verique seus parâmetros.";
-                    self.loadcallback(error);
+                    self.loadcallback._error(error);
                     return false;
                 }
             });
         });
     }
 
-    self.loadcallback = function(status){
-        console.error(status);
+    self.loadcallback = {
+        _error: function(status){
+            console.error(status);
+        }
     }
 
     self.setTranslate = function(){
@@ -82,7 +111,38 @@ var moduleTranslate = function(){
         });
     }
 
+    self.cookie = {
 
+        _setCookie: function(name, value, exdays) {
+            var d, expires;
+
+            d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            expires = "expires=" + d.toUTCString();
+            document.cookie = name + "=" + value + "; " + expires;
+        },
+
+        _getCookie: function(name) {
+            var name, ca, i, c;
+
+            name = name + "=";
+            ca = document.cookie.split(';');
+
+            for(i=0; i<ca.length; i++) {
+                c = ca[i];
+
+                while(c.charAt(0)==' '){
+                    c = c.substring(1);
+                }
+                    
+                if(c.indexOf(name) != -1){
+                    return c.substring(name.length, c.length);
+                }
+            }
+
+            return "";
+        }
+    }
 
     return self;
 }();
