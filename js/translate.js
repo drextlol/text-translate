@@ -1,46 +1,67 @@
 /*jslint white: true */
-
-var modules = function(pathDict, langDefault){
+"use strict"
+var moduleTranslate = function(){
     var self, lang;
     self = {}
 
-    self.init = function(){
-        self.setTranslate();
-        self.getTranslate();
+    self.init = function(userOptions){
+        self.storageTranslate(self.loadOptions(userOptions));
     }
 
-    self.loadTranslate = function(lang){
-        if(lang != ""){
-            lang = $(this).data('set-translate');
+    /* Pega as opões de linguagem default,
+    ** e path do dicionário informado pelo user
+    */
+    self.loadOptions = function(userOptions){
+        var defaultOptions, getOptions;
+
+        defaultOptions = {
+            langDefault: "en",
+            pathDict: location.href + "dictionary.json"
+        }
+
+        getOptions = $.extend(true, defaultOptions, userOptions);
+        
+        return getOptions;
+    }
+
+    /* Carrega uma linguagem default do storage */
+    self.storageTranslate = function(load){
+        var storageLang, objStorage;
+
+        objStorage = localStorage.getItem('i18n');
+
+        if(localStorage.getItem('i18n')){
+            self.getTranslate(objStorage);
         }else{
-            if(!localStorage.getItem('i18n')){
-                localStorage.setItem('i18n', lang);
-            }else{
-                
+            objStorage = {
+                langDefault: load.langDefault,
+                pathDict: load.pathDict
             }
+
+            localStorage.setItem('i18n', JSON.stringify(objStorage));
+            self.getTranslate(localStorage.getItem('i18n'));
         }
     }
 
-    self.setTranslate = function(){
-        $("[data-set-translate]").on('click', function(e){
-            e.preventDefault();
+    self.getTranslate = function(storageBrowser){
+        var getText, objStorage;
 
-            self.getTranslate("dictionary.json", lang);
-            
-        });
-
-    }
-
-    self.getTranslate = function(archive, lang){
-        /* Variables */
-        var getText;
-
+        objStorage = JSON.parse(storageBrowser);
+        
         /* Get file JSON */
-        $.getJSON(archive, "json", function(data) {
+        $.getJSON(objStorage.pathDict, "json", function(data) {
             $("[data-get-translate]").each(function(index, val) {
                 getText = $(this).data('get-translate');
-                $(this).text(data[getText][lang]);
+                $(this).text(data[getText][objStorage.langDefault]);
             });
+        });
+    }
+
+    self.setTranslate = function(){
+        //lang = $(this).data('set-translate');
+        $("[data-set-translate]").on('click', function(e){
+            e.preventDefault();
+            self.getTranslate("dictionary.json", lang); 
         });
     }
 
@@ -48,5 +69,7 @@ var modules = function(pathDict, langDefault){
 }();
 
 $(document).ready(function(){
-    $(document).textTranslate();
+    moduleTranslate.init({
+        langDefault: "pt"
+    });
 });

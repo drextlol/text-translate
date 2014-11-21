@@ -6,5 +6,9 @@
 	"download_plugin":{ 
 		"pt": "Descarregar plugin",
 		"en": "Download plugin"
+	},
+	"meu_idioma":{ 
+		"pt": "Meu texto em outro idioma",
+		"en": "My text in another language"
 	}
 }
