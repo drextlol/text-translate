@@ -4,6 +4,7 @@ var moduleTranslate = function(){
     var self;
     self = {}
 
+    /* Recebe as opções do user e executa os métodos */
     self.init = function(userOptions){
         self.saveLanguage(self.loadOptions(userOptions));
     }
@@ -34,6 +35,7 @@ var moduleTranslate = function(){
         }
     }
 
+    /* Função de criação do storage */
     self.storageAction = function(load){
         var objStorage;
 
@@ -52,6 +54,7 @@ var moduleTranslate = function(){
         }
     }
 
+    /* Função de criação de cookie */
     self.cookieAction = function(load){
         var objStorage;
 
@@ -71,6 +74,7 @@ var moduleTranslate = function(){
 
     }
 
+    /* Traduz a tela no client */
     self.getTranslate = function(storageBrowser){
         var getText, objStorage, error;
 
@@ -97,6 +101,7 @@ var moduleTranslate = function(){
         });
     }
 
+    /* Callbacks */
     self.loadcallback = {
         _error: function(status){
             console.error(status);
@@ -111,6 +116,7 @@ var moduleTranslate = function(){
         });
     }
 
+    /* Função de cookies */
     self.cookie = {
 
         _setCookie: function(name, value, exdays) {
@@ -149,6 +155,6 @@ var moduleTranslate = function(){
 
 $(document).ready(function(){
     moduleTranslate.init({
-        langDefault: "pt"
+        langDefault: "en"
     });
 });
